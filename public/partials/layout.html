@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sobic | Framework 1.0 </title>
+		<base href="/">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/main.css">
+
+		<link href='//fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+		<script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="//code.angularjs.org/1.3.1/angular.js"></script>
+		<script src="//code.angularjs.org/1.3.1/angular-cookies.js"></script>
+		<script src="//code.angularjs.org/1.3.1/angular-route.js"></script>
+		<script src="//code.angularjs.org/1.3.1/angular-animate.js"></script>
+		<script src="js/libs/ui-bootstrap-tpls-0.13.0.min.js"></script>
+		<script src="js/libs/angular-parallax.js"></script>
+		
+		<script src="js/main.js"></script>
+		<script src="js/libs/sobic.js"></script>
+		<script src="js/controllers/menu.js"></script>
+		<script src="js/controllers/user/main.js"></script>
+		<script src="js/controllers/user/show.js"></script>
+		<script src="js/controllers/modal/main.js"></script>
+		<script src="js/controllers/pages/contact.js"></script>
+		
+		<!-- Es importante que respetes estos comentarios para general scaffold sin probremas. -->
+		<!-- Scaffold JS -->
+
+	</head>
+
+	<body ng-app="sobic">
+		<header ng-controller="MenuController">
+			<nav class="navbar navbar-default navbar-fixed-top">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="/">Sobic | Framework</a>
+					</div>
+					<div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+						<ul class="nav navbar-nav navbar-right">
+							<li ng-if="!user"><a href="user" class="shadowText" title="Weather"><span>Login</span></a></li>
+							<li ng-if="user"><a ng-click="logout()" class="shadowText pointer" title="Logout"><span>Logout</span></a></li>
+							<li ng-if="user"><a href="user" class="shadowText" title="Profile"><span>Profile</span></a></li>
+							<li ng-if="user"><a href="users/show" class="shadowText" title="User list"><span>Users</span></a></li>
+							<!-- Es importante que respetes estos comentarios para general scaffold sin probremas. -->
+							<!-- Scaffold HTML -->
+
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</header>
+		
+		<section id="main-container">
+			<article id="yield" ng-view class="page">
+				<h1>UPSS!!..Nothing happens our sprucing ants in a while.. While resting. <i class="fa fa-bed"></i></h1>
+			</article>
+		</section>
+	
+		<footer class="navbar-inverse">
+			<div class="container">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="https://github.com/gamesrol/Sobic" target="_blank" title="Sobic">Power by <i class="fa fa-cubes"></i>Sobic <small>&copy;</small></a>
+					</li>
+				</ul>
+			</div>
+		</footer>
+	</body>
+</html>

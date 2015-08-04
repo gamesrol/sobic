@@ -1,0 +1,31 @@
+<div ng-if="!user" class="container">
+	<form class="col-xs-12 col-sm-6" ng-if="!user">
+		<h3>Login</h3>
+		<div class="input-group-lg">
+			<input type="email" class="form-control" placeholder="E-mail" ng-model="login.email">
+		</div>
+		<div class="input-group-lg">
+			<input type="password" class="form-control" placeholder="Password" ng-model="login.password">
+		</div>
+		<input type="submit" class="btn btn-info pull-right" value="Login" ng-click="loginUser(login)" ng-disabled="!login.email || !login.password">
+	</form>
+	<form class="col-xs-12 col-sm-6">
+		<h3>Register</h3>
+		<div class="input-group-lg">
+			<input type="email" class="form-control" placeholder="Email" ng-model="register.email">
+		</div>
+		<div class="input-group-lg">
+			<input type="password" class="form-control" placeholder="Password" ng-model="register.password">
+		</div>
+		<div class="input-group-lg">
+			<input type="password" class="form-control" placeholder="Confirm Password" ng-model="register.password2">
+		</div>
+		<input type="submit" class="btn btn-info pull-right" value="Register" ng-click="registerUser(register)" ng-disabled="!register.email || !register.password || !register.password2 || register.password != register.password2">
+	</form>
+</div>
+
+<div ng-if="user" class="container">
+	<div class="row">
+		<h3 class="col-xs-12"><i class="fa fa-child"></i> Ya estas logeado</h3>
+	</div>
+</div>

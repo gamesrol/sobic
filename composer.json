@@ -1,0 +1,34 @@
+{
+	"name": "NextSun/Sobic",
+	"description": "Sobic power",
+	"type": "project",
+	"authors":[
+		{
+			"name": "Gustavo Adolfo Mesa Roldan",
+			"email": "gs.gore@gmail.com",
+			"homepage": "http://blog.nextsun.eu",
+			"role": "God"
+		},
+		{
+			"name": "Danien Rodriguez",
+			"email": "drg809@gmail.com",
+			"homepage": "http://blog.nextsun.eu",
+			"role": "Dragon"
+		}
+	],
+	"require": {
+		"slim/slim": "2.*",
+		"illuminate/database": "*",
+		"leafo/lessphp": "0.4.0",
+		"kevinlebrun/colors.php": "0.*"
+	},
+	"autoload": {
+		"files": [ 
+			"vendor/sobic/main.php",
+			"config/environment.php"
+		],
+		"classmap": [
+			"app/models"
+		]
+	}
+}

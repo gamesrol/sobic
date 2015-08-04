@@ -1,0 +1,511 @@
+#!/usr/bin/env php
+<?php
+
+/*
+Sobic 1.0 
+
+	Idea and implementation by:
+		-Gustavo Adolfo Mesa Roldán
+
+	Supported by:
+		-Daniel rodriguez (Assistant, something more than itching code & doc, corrections and moral support)
+		-Rafael Bustamante (Manager, css artist and moral support)
+
+*/
+require __DIR__.'/vendor/autoload.php';
+define("MODELS_PATH", __DIR__."/app/models");
+define("CONTROLLERS_PATH", __DIR__."/app/controllers");
+define("BACKEND_MAIN_PATH", __DIR__."/app/main.php");
+define("FRONTEND_MAIN_PATH", __DIR__."/public/js/main.js");
+define("LAYOUT_HTML_PATH", __DIR__."/public/partials/layout.html");
+define("VIEWS_PATH", __DIR__."/public/partials");
+define("MIGRATIONS_PATH", __DIR__."/database/migrations");
+define("SEEDS_PATH", __DIR__."/database/seeds");
+use Colors\Color;
+
+class Sobic {
+
+	function __construct($args){
+		$this->args = $args;
+	}
+
+	function exec(){
+		$c = new Color();
+		echo $c("\nSobic 1.0 Dev\n\n")->bold();
+		if (count($this->args) <= 1) {
+			$this->help();
+		} else {
+			switch ($this->args[1]) {
+				case "migrate":
+					$this->executeMigrations();
+					if (!isset($this->args[2]) || $this->args[2] != '--seed')
+						break;
+				case "seed":
+					$this->executeSeed();
+					break;
+				case "less":
+					$this->executeLess();
+					break;
+				case "create":
+					$this->executeCreate();
+					break;
+				default:
+					$this->help();
+					break;
+			}
+		}
+	}
+
+	function help(){
+		$c = new Color();
+		echo $c("Help:\n\n")->white()->bold()->underline();
+		echo "\tusage: php sobic [arguments]\n\n";
+		echo $c("Arguments:\n\n")->white()->bold()->underline();
+		echo "\tcreate controller [name]\t\t Create controller with name.\n";
+		echo "\tcreate model [name] [arguments]\t\t Create model with name.\n";
+		echo "\tcreate views [name] [arguments]\t\t Create views with name.\n";
+		echo "\tcreate migrate [name] [arguments]\t Create migration with name.\n";
+		echo "\tcreate seed [name]\t\t\t Create seed with name.\n";
+		echo "\tcreate scaffold [name] [arguments]\t Create migration, seed, model, controller and views with the arguments.\n";
+		echo "\tmigrate [--seed]\t\t\t Execute the migrations into the DB.\n";
+		echo "\tseed\t\t\t\t\t Create a defaut row.\n";
+		echo "\tless\t\t\t\t\t Compile from /public/css/less/main.less to /public/css/main.css.\n";
+		echo "\n";
+	}
+
+	function executeMigrations(){
+		$c = new Color();
+		$files = glob(MIGRATIONS_PATH.'/*.php');
+		$this->run($files);
+		echo $c("Migrations upgrade was compiled successful\n\n")->green();
+	}
+
+	function executeSeed(){
+		$c = new Color();
+		$files = glob(SEEDS_PATH.'/*.php');
+		$this->run($files);
+		echo $c("Seed upgrade was compiled successful\n\n")->green();
+	}
+
+	function executeLess(){
+		$c = new Color();
+		autoCompileLess('public/css/less/main.less', 'public/css/main.css');
+		echo $c("Less upgrade was compiled successful\n\n")->green();
+	}
+
+	function executeCreate(){
+		$c = new Color();
+		if (count($this->args) <= 3) {
+			echo $c("Error: An argument is missing\n\n")->red();
+			$this->help();
+		} else {
+			switch ($this->args[2]) {
+				case "scaffold":
+					$this->createScaffold();
+					break;
+				case "controller":
+					$this->createController();
+					break;
+				case "model":
+					$this->createModel();
+				case "migrate":
+					$this->createMigrate();
+					break;
+				case "seed":
+					$this->createSeed();
+					break;
+				case "views":
+					$this->createViews();
+					break;
+				default:
+					$this->help();
+					break;
+			}
+		}
+		echo $c("\n")->red();
+			
+	}
+
+	function createController(){
+		$c = new Color();
+		$name = ucwords($this->args[3]);
+		$fp = fopen(CONTROLLERS_PATH.'/'.substr($this->args[3], 0, -1).'.php', 'w');
+		fwrite($fp, '<?php'.PHP_EOL.PHP_EOL.'/**'.PHP_EOL.' * '.substr($name, 0, -1).' Controller'.PHP_EOL.' */'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '$app->group(\'/'.$this->args[3].'\', function () use ($app) {'.PHP_EOL);
+		fwrite($fp, '	$app->get(\'/\', function () use ($app) {'.PHP_EOL);
+		fwrite($fp, '		$results = [];'.PHP_EOL);
+		fwrite($fp, '		$results[\''.$this->args[3].'\'] = '.substr($name, 0, -1).'::all();'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		$results["success"]= "true";'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		echo json_encode($results);'.PHP_EOL);
+		fwrite($fp, '	});'.PHP_EOL.PHP_EOL);
+		
+		fwrite($fp, '	$app->get(\'/show/:id\', function ($id) use ($app) {'.PHP_EOL);
+		fwrite($fp, '		$results = [];'.PHP_EOL);
+		fwrite($fp, '		$results["'.substr($this->args[3], 0, -1).'"] = '.substr($name, 0, -1).'::find($id);'.PHP_EOL);
+		fwrite($fp, '		$results["success"]= "true";'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		echo json_encode($results);'.PHP_EOL);
+		fwrite($fp, '	});'.PHP_EOL.PHP_EOL);
+		
+		fwrite($fp, '	$app->post(\'/form\', function () use ($app) {'.PHP_EOL);
+		fwrite($fp, '		$data = json_decode($app->request->getBody(), true);'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		$results = [];'.PHP_EOL);
+		fwrite($fp, '		$results["success"]= "false";'.PHP_EOL);
+		fwrite($fp, '		if (validatedKey($data[\'user\'])) {'.PHP_EOL);
+		fwrite($fp, '			if($data[\''.substr($this->args[3], 0, -1).'\'][\'id\']){'.PHP_EOL);
+		fwrite($fp, '				'.substr($name, 0, -1).'::find($data[\''.substr($this->args[3], 0, -1).'\'][\'id\'])->update($data[\''.substr($this->args[3], 0, -1).'\']);'.PHP_EOL);
+		fwrite($fp, '			}else{'.PHP_EOL);
+		fwrite($fp, '				'.substr($name, 0, -1).'::create($data[\''.substr($this->args[3], 0, -1).'\']);'.PHP_EOL);
+		fwrite($fp, '			}'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '			$results["success"]= "true";'.PHP_EOL);
+		fwrite($fp, '			$results["value"]= "New";'.PHP_EOL);
+		fwrite($fp, '		} else {'.PHP_EOL);
+		fwrite($fp, '			$results["success"]= "false";'.PHP_EOL);
+		fwrite($fp, '			$results["error"]= "No auth";'.PHP_EOL);
+		fwrite($fp, '		}'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		echo json_encode($results);'.PHP_EOL);
+		fwrite($fp, '	});'.PHP_EOL.PHP_EOL);
+
+		fwrite($fp, '	$app->post(\'/delete\', function () use ($app) {'.PHP_EOL);
+		fwrite($fp, '		$data = json_decode($app->request->getBody(), true);'.PHP_EOL);
+		fwrite($fp, '		$results = [];'.PHP_EOL);
+		fwrite($fp, '		$results["success"]= "false";'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		if (validatedKey($data[\'user\'])) {'.PHP_EOL);
+		fwrite($fp, '			$'.substr($this->args[3], 0, -1).' = '.substr($name, 0, -1).'::find($data[\''.substr($this->args[3], 0, -1).'\'][\'id\']);'.PHP_EOL);
+		fwrite($fp, '			$'.substr($this->args[3], 0, -1).'->delete();'.PHP_EOL);
+		fwrite($fp, '			$results["'.$this->args[3].'"] = '.substr($name, 0, -1).'::all();'.PHP_EOL);
+		fwrite($fp, '			$results["success"]= "true";'.PHP_EOL);
+		fwrite($fp, '			$results["value"]= "delete";'.PHP_EOL);
+		fwrite($fp, '		} else {'.PHP_EOL);
+		fwrite($fp, '			$results["success"]= "false";'.PHP_EOL);
+		fwrite($fp, '			$results["error"]= "No auth";'.PHP_EOL);
+		fwrite($fp, '		}'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		echo json_encode($results);'.PHP_EOL);
+		fwrite($fp, '	});'.PHP_EOL);
+		fwrite($fp, '});'.PHP_EOL);
+		fclose($fp);
+		echo $c("Create file \tapp/controllers/".substr($this->args[3], 0, -1).".php\n")->green();
+		
+		$fp=fopen(BACKEND_MAIN_PATH,'r'); 
+		$nf = [];
+		while (!feof($fp)) { 
+			$line = fgets($fp,4096);
+			array_push($nf, $line);
+			if(trim($line) == trim('/** Scaffold PHP Controller **/')){
+				$lineNum = count($nf);
+			}
+		} 
+		fclose($fp);
+		
+		array_splice( $nf, $lineNum, 0, '	include (\'controllers/'.substr($this->args[3], 0, -1).'.php\');'.PHP_EOL );
+		
+		$fp = fopen(BACKEND_MAIN_PATH, 'w');
+		foreach ($nf as $line) {
+		   	fwrite($fp, $line);
+		}
+		fclose($fp);
+		echo $c("Modific file \tapp/main.php\n")->green();
+	}
+
+	function createModel(){
+		$c = new Color();
+		$name = ucwords($this->args[3]);
+		$fp = fopen(MODELS_PATH.'/'.$name.'.php', 'w');
+		fwrite($fp, '<?php'.PHP_EOL.PHP_EOL.'/**'.PHP_EOL.' * '.substr($name, 0, -1).' Model'.PHP_EOL.' */'.PHP_EOL.PHP_EOL);
+		fwrite($fp, 'class '.substr($name, 0, -1).' extends \Illuminate\Database\Eloquent\Model'.PHP_EOL);
+		fwrite($fp, '{'.PHP_EOL);
+		fwrite($fp, '	protected $table = "'.$this->args[3].'";'.PHP_EOL);
+		fwrite($fp, '	protected $fillable = [');
+		for($i = 4; $i<count($this->args); $i++){
+			fwrite($fp, '\''.split("'", $this->args[$i])[1].'\'');
+			if($i!=count($this->args)-1){
+				fwrite($fp, ',');
+			}
+		}
+		fwrite($fp, '];'.PHP_EOL);
+		fwrite($fp, '}');
+		fclose($fp);
+		echo $c("Create file \tapp/models/".$name.".php\n")->green();
+	}
+
+	function createMigrate(){
+		$c = new Color();
+		$name = ucwords($this->args[3]);
+		$fp = fopen(MIGRATIONS_PATH.'/'.$name.'Migration.php', 'w');
+		fwrite($fp, '<?php'.PHP_EOL.PHP_EOL.'use Illuminate\Database\Capsule\Manager as Capsule;'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '/**'.PHP_EOL.' * '.$name.' Migrate'.PHP_EOL.' */'.PHP_EOL.PHP_EOL);
+		fwrite($fp, 'class '.$name.'Migration {'.PHP_EOL.'	function run()'.PHP_EOL.'	{'.PHP_EOL);
+		fwrite($fp, '		Capsule::schema()->dropIfExists(\''.$this->args[3].'\');'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '		Capsule::schema()->create(\''.$this->args[3].'\', function($table) {'.PHP_EOL);
+		fwrite($fp, '			$table->increments(\'id\');'.PHP_EOL);
+		for($i = 4; $i<count($this->args); $i++){
+			fwrite($fp, '			$table->'.$this->args[$i].';'.PHP_EOL);
+		}
+		fwrite($fp, '			$table->timestamps();'.PHP_EOL);
+		fwrite($fp, '		});'.PHP_EOL.'	}'.PHP_EOL.'}');
+		fclose($fp);
+		echo $c("Create file \tapp/database/migrations/".$name."Migration.php\n")->green();
+	}
+
+	function createSeed(){
+		$c = new Color();
+		$name = ucwords($this->args[3]);
+		$fp = fopen(SEEDS_PATH.'/'.$name.'Seed.php', 'w');
+		fwrite($fp, '<?php'.PHP_EOL.PHP_EOL);
+		fwrite($fp, '/**'.PHP_EOL.' * '.$name.' Seed'.PHP_EOL.' */'.PHP_EOL.PHP_EOL);
+		fwrite($fp, 'class '.$name.'Seed {'.PHP_EOL.'	function run()'.PHP_EOL.'	{'.PHP_EOL);
+		fwrite($fp, '	}'.PHP_EOL.'}');
+		fclose($fp);
+		echo $c("Create file \tapp/database/seeds/".$name."Seed.php\n")->green();
+	}
+	
+	function createViews(){
+		$c = new Color();
+		$name = ucwords($this->args[3]);
+		
+		/* Comprueba o crea la carpeta de los partils HTML*/		
+		if(!file_exists("public/partials/".substr($this->args[3], 0, -1))) {
+			mkdir("public/partials/".substr($this->args[3], 0, -1), 0700);
+		    echo $c("Create folder \tpublic/partials/".substr($this->args[3], 0, -1)."\n")->green();
+		}else{
+			echo $c("Exicts folder \tpublic/partials/".substr($this->args[3], 0, -1)."\n")->green();
+		}
+		
+		/** HTML Formulario* */
+		$fp1 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/form.html', 'w');
+		fwrite($fp1, '<div class="weather container">'.PHP_EOL);
+		fwrite($fp1, '	<form class="col-xs-6 col-xs-offset-3">'.PHP_EOL);
+		fwrite($fp1, '		<h3 ng-if="!'.substr($this->args[3], 0, -1).'.id">Create '.substr($this->args[3], 0, -1).'</h3><h3 ng-if="'.substr($this->args[3], 0, -1).'.id">Edit '.substr($this->args[3], 0, -1).'</h3>'.PHP_EOL);
+		for($i = 4; $i<count($this->args); $i++){
+			fwrite($fp1, '			<input type="text" class="form-control" placeholder="'.ucwords(split("'", $this->args[$i])[1]).'" ng-model="'.substr($this->args[3], 0, -1).'.'.split("'", $this->args[$i])[1].'" >'.PHP_EOL);
+		}
+		fwrite($fp1, '		<input type="submit" class="btn btn-info pull-right" value="send" ng-click="create'.substr($name, 0, -1).'('.substr($this->args[3], 0, -1).')">'.PHP_EOL);
+		fwrite($fp1, '	</form>'.PHP_EOL);
+		fwrite($fp1, '</div>'.PHP_EOL);
+		fclose($fp1);
+		echo $c("Create file \tpublic/partials/".substr($this->args[3], 0, -1)."/form.html\n")->green();
+		
+		/** HTML Listado* */
+		$fp2 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/show.html', 'w');
+		fwrite($fp2, '<div class="shop container">'.PHP_EOL);
+		fwrite($fp2, '	<h3 class="col-xs-12"><i class="fa fa-list"></i> '.$name.'</h3>'.PHP_EOL);
+		fwrite($fp2, '	<div class="form-group col-xs-11 col-sm-7 col-md-5">'.PHP_EOL);
+		fwrite($fp2, '		<div class="input-group">'.PHP_EOL);
+		fwrite($fp2, '			<input ng-model="filter" type="text" class="form-control" placeholder="'.$name.' Search">'.PHP_EOL);
+		fwrite($fp2, '			<div class="input-group-addon pointer"><i class="fa fa-search"></i></div>'.PHP_EOL);
+		fwrite($fp2, '		</div>'.PHP_EOL);
+		fwrite($fp2, '	</div>'.PHP_EOL);
+		fwrite($fp2, '	<div ng-if="user" class="form-group col-xs-1 col-sm-1">'.PHP_EOL);
+		fwrite($fp2, '		<a href="'.$this->args[3].'/form" class="btn btn-default" ng-click=""><i class="fa fa-plus"></i></a>'.PHP_EOL);
+		fwrite($fp2, '	</div>'.PHP_EOL.PHP_EOL);
+		fwrite($fp2, '	<div class="row list">'.PHP_EOL);
+		fwrite($fp2, '		<div class="col-xs-12 col-sm-12">'.PHP_EOL);
+		fwrite($fp2, '			<div ng-repeat="item in list | filter: filter " class="animate col-xs-6 col-md-4 col-lg-3">'.PHP_EOL);
+		fwrite($fp2, '				<div class="panel panel-default">'.PHP_EOL);
+		fwrite($fp2, '					<div class="panel-heading">'.PHP_EOL);
+		fwrite($fp2, '					    <h4 class="panel-title">{{item.name}}<h4> '.PHP_EOL);
+		fwrite($fp2, '					</div>'.PHP_EOL);
+		fwrite($fp2, '					<div class="panel-body">'.PHP_EOL);
+		fwrite($fp2, '						<ul>'.PHP_EOL);
+		for($i = 4; $i<count($this->args); $i++){
+			fwrite($fp2, '							<li>{{item.'.split("'", $this->args[$i])[1].'}}</li>'.PHP_EOL);
+		}
+		fwrite($fp2, '						</ul>'.PHP_EOL);
+		fwrite($fp2, '					</div>'.PHP_EOL);
+		fwrite($fp2, '					<div class="panel-footer">	'.PHP_EOL);
+		fwrite($fp2, '						<a class="btn btn-default" ng-click="remove'.substr($name, 0, -1).'(item)"><i class="fa fa-trash-o"></i></a>'.PHP_EOL);
+		fwrite($fp2, '						<a class="btn btn-default" href="/'.$this->args[3].'/form/{{item.id}}"><i class="fa fa-pencil-square-o"></i></a>'.PHP_EOL);
+		fwrite($fp2, '					</div>'.PHP_EOL);
+		fwrite($fp2, '				</div>'.PHP_EOL);
+		fwrite($fp2, '			</div>'.PHP_EOL);
+		fwrite($fp2, '		</div>'.PHP_EOL);
+		fwrite($fp2, '	</div>'.PHP_EOL);
+		fwrite($fp2, '</div>'.PHP_EOL);
+		fclose($fp2);
+		echo $c("Create file \tpublic/partials/".substr($this->args[3], 0, -1)."/form.html\n")->green();
+
+		/* Comprueba o crea la carpeta del controlador JS*/		
+		if(!file_exists("public/js/controllers/".substr($this->args[3], 0, -1))) {
+			mkdir("public/js/controllers/".substr($this->args[3], 0, -1), 0700);
+		    echo $c("Create folder \tpublic/js/controllers/".substr($this->args[3], 0, -1)."\n")->green();
+		}else{
+			echo $c("Exicts folder \tpublic/js/controllers/".substr($this->args[3], 0, -1)."\n")->green();
+		}
+		
+		/** JS Formulario* */
+		$fp3 = fopen('public/js/controllers/'.substr($this->args[3], 0, -1).'/form.js', 'w');
+		fwrite($fp3, 'app.controller(\''.substr($name, 0, -1).'FormController\', function($scope, $cookieStore, $http, $location, $routeParams, $modal) {'.PHP_EOL);
+		fwrite($fp3, '	if( typeof($cookieStore.get(\'user\')) != "undefined" ){'.PHP_EOL);
+		fwrite($fp3, '		$scope.user = $cookieStore.get(\'user\');	'.PHP_EOL);
+		fwrite($fp3, '		if($routeParams.id){'.PHP_EOL);
+		fwrite($fp3, '			$http({'.PHP_EOL);
+		fwrite($fp3, '				method: \'GET\','.PHP_EOL);
+		fwrite($fp3, '				url: serverURL+"/'.$this->args[3].'/show/"+$routeParams.id,'.PHP_EOL);
+		fwrite($fp3, '				data: {'.PHP_EOL);
+		fwrite($fp3, '					user: $scope.user'.PHP_EOL);
+		fwrite($fp3, '				},'.PHP_EOL);
+		fwrite($fp3, '				headers: {\'Content-Type\': \'application/x-www-form-urlencoded\'},'.PHP_EOL);
+		fwrite($fp3, '			}).success(function(data, status, headers, config) {'.PHP_EOL.PHP_EOL);
+		
+		fwrite($fp3, '				if(data.success == "true"){'.PHP_EOL);
+		fwrite($fp3, '					$scope.'.substr($this->args[3], 0, -1).' = data.'.substr($this->args[3], 0, -1).';'.PHP_EOL);
+		fwrite($fp3, '				}else{'.PHP_EOL);
+		fwrite($fp3, '					modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp3, '				}'.PHP_EOL);
+		
+		fwrite($fp3, '			}).error(function(data, status, headers, config) {'.PHP_EOL);
+		fwrite($fp3, '				modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp3, '			});'.PHP_EOL);
+		fwrite($fp3, '		}'.PHP_EOL.PHP_EOL);
+		fwrite($fp3, '		$scope.create'.substr($name, 0, -1).' = function ('.substr($this->args[3], 0, -1).') {'.PHP_EOL);
+		fwrite($fp3, '			$http({'.PHP_EOL);
+		fwrite($fp3, '				method: \'POST\','.PHP_EOL);
+		fwrite($fp3, '				url: serverURL+"/'.$this->args[3].'/form",'.PHP_EOL);
+		fwrite($fp3, '				data: {'.PHP_EOL);
+		fwrite($fp3, '					'.substr($this->args[3], 0, -1).': '.substr($this->args[3], 0, -1).','.PHP_EOL);
+		fwrite($fp3, '					user: $scope.user'.PHP_EOL);
+		fwrite($fp3, '				},'.PHP_EOL);
+		fwrite($fp3, '				headers: {\'Content-Type\': \'application/x-www-form-urlencoded\'},'.PHP_EOL);
+		fwrite($fp3, '			}).success(function(data, status, headers, config) {'.PHP_EOL);
+		
+		fwrite($fp3, '				if(data.success == "true"){'.PHP_EOL);
+		fwrite($fp3, '					$location.path( "/'.$this->args[3].'" );'.PHP_EOL);
+		fwrite($fp3, '				}else{'.PHP_EOL);
+		fwrite($fp3, '					modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp3, '				}'.PHP_EOL);
+		
+		fwrite($fp3, '			}).error(function(data, status, headers, config) {'.PHP_EOL);
+		fwrite($fp3, '				modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp3, '			});'.PHP_EOL);
+		fwrite($fp3, '		};'.PHP_EOL);
+		fwrite($fp3, '	}'.PHP_EOL);
+		fwrite($fp3, '});'.PHP_EOL);
+		fclose($fp3);
+		echo $c("Create file \tpublic/js/controllers/".substr($this->args[3], 0, -1)."/form.js\n")->green();
+
+		/** JS Listado* */
+		$fp4 = fopen('public/js/controllers/'.substr($this->args[3], 0, -1).'/show.js', 'w');
+		fwrite($fp4, 'app.controller(\''.substr($name, 0, -1).'Controller\', function($scope, $cookieStore, $http, $filter, $modal) {'.PHP_EOL);
+		fwrite($fp4, '	if(typeof($cookieStore.get(\'user\')) != "undefined"){'.PHP_EOL);
+		fwrite($fp4, '		$scope.user = $cookieStore.get(\'user\');'.PHP_EOL);
+		fwrite($fp4, '	}'.PHP_EOL.PHP_EOL);
+		fwrite($fp4, '	$http({'.PHP_EOL);
+		fwrite($fp4, '		method: \'GET\','.PHP_EOL);
+		fwrite($fp4, '		url: serverURL+"/'.$this->args[3].'/",'.PHP_EOL);
+		fwrite($fp4, '		headers: {\'Content-Type\': \'application/x-www-form-urlencoded\'},'.PHP_EOL);
+		fwrite($fp4, '	}).success(function(data, status, headers, config) {'.PHP_EOL);
+		
+		fwrite($fp4, '		if(data.success == "true"){'.PHP_EOL);
+		fwrite($fp4, '			$scope.list = data.'.$this->args[3].';'.PHP_EOL);
+		fwrite($fp4, '		}else{'.PHP_EOL);
+		fwrite($fp4, '			modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp4, '		}'.PHP_EOL);
+		
+		fwrite($fp4, '	}).error(function(data, status, headers, config) {'.PHP_EOL);
+		fwrite($fp4, '		modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp4, '	});'.PHP_EOL.PHP_EOL);
+		fwrite($fp4, '	$scope.remove'.substr($name, 0, -1).' = function('.substr($this->args[3], 0, -1).'){'.PHP_EOL);
+		fwrite($fp4, '		var basket = $cookieStore.get(\'basket\');'.PHP_EOL);
+		fwrite($fp4, '		$http({'.PHP_EOL);
+		fwrite($fp4, '			method: \'POST\','.PHP_EOL);
+		fwrite($fp4, '			url: serverURL+"/'.$this->args[3].'/delete",'.PHP_EOL);
+		fwrite($fp4, '			data: {'.PHP_EOL);
+		fwrite($fp4, '				'.substr($this->args[3], 0, -1).': '.substr($this->args[3], 0, -1).','.PHP_EOL);
+		fwrite($fp4, '				user: $scope.user'.PHP_EOL);
+		fwrite($fp4, '			},'.PHP_EOL);
+		fwrite($fp4, '			headers: {\'Content-Type\': \'application/x-www-form-urlencoded\'},'.PHP_EOL);
+		fwrite($fp4, '		}).success(function(data, status, headers, config) {'.PHP_EOL);
+		
+		fwrite($fp4, '			if(data.success == "true"){'.PHP_EOL);
+		fwrite($fp4, '				var index = $scope.list.indexOf('.substr($this->args[3], 0, -1).')'.PHP_EOL);
+		fwrite($fp4, '				$scope.list.splice(index, 1);'.PHP_EOL);
+		fwrite($fp4, '			}else{'.PHP_EOL);
+		fwrite($fp4, '				modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp4, '			}'.PHP_EOL);
+		
+		fwrite($fp4, '		}).error(function(data, status, headers, config) {'.PHP_EOL);
+		fwrite($fp4, '			modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp4, '		});'.PHP_EOL);
+		fwrite($fp4, '	};'.PHP_EOL);
+		fwrite($fp4, '});'.PHP_EOL);
+		fclose($fp4);
+		echo $c("Create file \tpublic/js/controllers/".substr($this->args[3], 0, -1)."/show.js\n")->green();
+		
+		$fp=fopen(FRONTEND_MAIN_PATH,'r'); 
+		$nf = [];
+		while (!feof($fp)) { 
+			array_push($nf,fgets($fp,4096)); 
+		} 
+		fclose($fp);
+		
+		array_splice( $nf, count($nf)-4, 0, 
+			"	}).when('/".$this->args[3]."', {".PHP_EOL.
+			"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/show.html',".PHP_EOL.
+			"		controller: '".substr($name, 0, -1)."Controller'".PHP_EOL.
+			"	}).when('/".$this->args[3]."/form', {".PHP_EOL.
+			"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/form.html',".PHP_EOL.
+			"		controller: '".substr($name, 0, -1)."FormController'".PHP_EOL.
+			"	}).when('/".$this->args[3]."/form/:id', {".PHP_EOL.
+			"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/form.html',".PHP_EOL.
+			"		controller: '".substr($name, 0, -1)."FormController'".PHP_EOL );
+		
+		$fp = fopen(FRONTEND_MAIN_PATH, 'w');
+		foreach ($nf as $line) {
+		   	fwrite($fp, $line);
+		}
+		fclose($fp);
+		echo $c("Modific file \tpublic/js/main.js\n")->green();
+		
+		$fp2=fopen(LAYOUT_HTML_PATH,'r'); 
+		$nf2 = [];
+		while (!feof($fp2)) {
+			$line = fgets($fp2,4096);
+			array_push($nf2, $line);
+			if(trim($line) == trim('<!-- Scaffold JS -->')){
+				$lineNum = count($nf2);
+			}
+			if(trim($line) == trim('<!-- Scaffold HTML -->')){
+				$lineLink = count($nf2)+1;
+			}
+		} 
+		fclose($fp2);
+		
+		array_splice( $nf2, $lineNum, 0, 
+		'		<script src="js/controllers/'.substr($this->args[3], 0, -1).'/show.js"></script>'.PHP_EOL.
+		'		<script src="js/controllers/'.substr($this->args[3], 0, -1).'/form.js"></script>'.PHP_EOL);
+		
+		array_splice( $nf2, $lineLink, 0, 
+		'							<li><a href="'.$this->args[3].'" class="shadowText" title="'.$name.'"><span>'.substr($name, 0, -1).'</span></a></li>'.PHP_EOL);
+		
+		$fp2 = fopen(LAYOUT_HTML_PATH, 'w');
+		foreach ($nf2 as $line) {
+		   	fwrite($fp2, $line);
+		}
+		fclose($fp2);
+		echo $c("Modific file \tpublic/partials/layout.html\n")->green();
+		
+	}
+	
+	function createScaffold(){
+		$c = new Color();
+		$name = ucwords($this->args[3]);
+		echo $c("Create scaffold ".$name.":\n\n")->green();
+		$this->createMigrate();
+		$this->createSeed();
+		
+		$this->createModel();
+		$this->createController();
+		$this->createViews();
+	}
+
+	private function run($files){
+		foreach ($files as $file){
+			require_once($file);
+			$class = basename($file, '.php');
+			$obj = new $class;
+			$obj->run();
+		}
+	}
+}
+
+$sobic = new Sobic($argv);
+$sobic->exec();

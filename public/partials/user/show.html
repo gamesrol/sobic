@@ -1,0 +1,21 @@
+<div class="block container">
+	<div class="row">
+		<h3 class="col-xs-12">
+			<i class="fa fa-users"></i> Usuarios
+		</h3>
+		<div class="form-group col-xs-12">
+			<div class="input-group">
+				<input ng-model="filter" type="text" class="form-control" placeholder="Filtrar">
+				<div class="input-group-addon"><i class="fa fa-search"></i></div>
+			</div>
+		</div>
+		<ul class="list-inline">
+			<li ng-repeat="item in list |filter: filter " class="animate col-xs-12 col-md-8 col-md-offset-2 hoverUp">
+				<a href="mailto:{{item.email}}"><i class="fa fa-envelope-o"></i> {{item.email}}</a><br/>
+				Registrado: {{item.created_at}}<br/>
+			</li>
+		</ul>
+	</div>
+</div>
+
+

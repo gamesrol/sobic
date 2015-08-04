@@ -1,0 +1,8 @@
+AddDefaultCharset UTF-8
+RewriteEngine on
+RewriteBase /
+RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
+
+ErrorDocument 404 /public/
+
+
