@@ -1,4 +1,4 @@
-var serverURL = "https://sobic-last-gamesrol.c9.io/public/index.php/api";
+var serverURL = "/public/index.php/api";
 var app = angular.module('sobic', ["ngCookies",'ui.bootstrap', 'ngRoute', 'ngAnimate', 'angular-parallax']);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
