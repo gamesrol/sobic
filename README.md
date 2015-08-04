@@ -82,6 +82,10 @@ Para crear una migración introduce la siguiente orden en consola:
 
     php sobic create migrate [name]
 
+Ejemplo:
+
+     php sobic create migrate shop "string('name')" "integer('price')" [...]
+
 Se creará un archivo parecido a este "app/database/migrations/ExamplesMigration.php".
 
 #### 5.1.2 Ejecutar la migración: 
@@ -101,6 +105,10 @@ El Modelo es la representación de la información con la cual el sistema opera,
 Para crear un modelo introducimos la siguiente orden:
 
     php sobic create model [name] [atributo:nombre_atributo],[..,]
+ 
+Ejemplo:
+
+     php sobic create model shop "string('name')" "integer('price')" [...]
     
 Se creará un archivo parecido a este "app/models/Examples.php".
 
@@ -112,7 +120,7 @@ Después de crear un modelo ha de actualizarse composer, para cargar el modelo c
 El controlador responde a eventos (usualmente acciones del usuario) e invoca peticiones al 'modelo' cuando se hace alguna solicitud sobre la información (por ejemplo, editar un documento o un registro en una base de datos).
 Para crear un controlador introducimos la siguiente orden:
 
-    php sobic create controller [name] [atributo:nombre_atributo],[..,]
+    php sobic create controller [name]
     
 Se creará un archivo parecido a este "app/controllers/example.php".
 
@@ -121,6 +129,10 @@ La orden Scaffold genera una estructura base de una aplicación con todas las in
 Para crear un controlador introducimos la siguiente orden:
 
     php sobic create scaffold [name] [arguments],[..,]
+
+Ejemplo:
+
+     php sobic create scaffold shop "string('name')" "integer('price')" [...]
 
 Durante la creación del scaffold se modifican los siguientes archivos:
  
