@@ -7,26 +7,7 @@
     ##    ## ###    ## ##     ##  ##  ##    ## 
      ######   #######  ########  ####  ######  
 
-
-## 0. Índice
-
-#### 1. Introducción.
-#### 2. Requisitos de Sobic.
-#### 3. Estructura de Sobic.
-#### 4. Comenzando con Sobic.
-#### 5. Instrucciones de Sobic.
-####    5.1 Migraciones.
-####        5.1.2 Ejecución de Migraciones.
-####    5.2 Poblado de datos.
-####    5.3 Modelos.
-####    5.4 Controladores.
-####    5.5 Scaffold.
-####    5.6 Vistas.
-#### 6. Recomendaciones.
-#### 7. Licencia.
-#### 8. Contacto con los desarrolladores.
-
-
+================================================
 
 ## 1. Introducción
 
