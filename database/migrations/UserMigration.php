@@ -6,7 +6,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  * User Migrate
  */
 
-class InnitialMigration {
+class UserMigration {
 	function run()
 	{
 		Capsule::schema()->dropIfExists('users');
