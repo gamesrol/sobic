@@ -53,14 +53,14 @@ Descargar el git desde la dirección de Sobic en github (https://github.com/next
     
     composer install/update
     
-Una vez realizada la tarea y con el sistema gestor de base de datos configurado, se modificará el acceso a la misma para que conecte satifactoriamente, para esto Sobic ofrece varios entornos de producción. 
+Una vez realizada la tarea y con el sistema gestor de base de datos configurado, se modificará el acceso a la misma para que conecte satisfactoriamente, para esto Sobic ofrece varios entornos de producción. 
 En la carpeta "config" y gestionado por el archivo "enviroment.php" se establece el estado de la plataforma entre desarrollo, prueba y producción, en cada uno podemos tener una base de datos diferente. Cada uno tiene su archivo donde establecer las variables de entorno y se hace de la siguiente manera:
 
      $capsule->addConnection(array(          
      	'driver'    => 'mysql',                      //Llamamos al driver que conecta con la base de datos.
-	     'host'      => getenv('IP'),                 //Establecemos el host de la base de datos.
+	     'host'      => getenv('IP'),            //Establecemos el host de la base de datos.
      	'port'      => 3306,                         //Seleccionamos el puerto de connexión.
-	     'database'  => 'c9',                         //Indicamos el nombre de la base de datos a utilizar.
+	     'database'  => 'c9',                    //Indicamos el nombre de la base de datos a utilizar.
      	'username'  => getenv('C9_USER'),            //Usuario de la base de datos.
      	'password'  => '',                           //Password del usuario.
      	'prefix'    => '',                           //Indicamos el prefijo
@@ -71,7 +71,7 @@ En la carpeta "config" y gestionado por el archivo "enviroment.php" se establece
  - Nota 1: El ejemplo utilizado es para un sistema implementado en c9.io, por eso se deja la contraseña en blanco, recuerda cambiarla antes de publicar el trabajo.
  - Nota 2: Ya que el ORM utilizado es ELOQUENT, la estructura y sentencias utilizadas es la misma que podemos encontrar en la documentación oficial de ELOQUENT. 
 
-Ahora se puede comenzar a introducir las diferentes instrucciones de Sobic, pero antes de hacer ninguna prueba recuerda que la configuración de acceso web se hace desde el archivo '.htaccess' ubicado en la raiz y por defecto, si se accede directamente a la carpeta "/public", invocará un error 404.
+Ahora se puede comenzar a introducir las diferentes instrucciones de Sobic, pero antes de hacer ninguna prueba recuerda que la configuración de acceso web se hace desde el archivo '.htaccess' ubicado en la raíz y por defecto, si se accede directamente a la carpeta "/public", invocará un error 404.
 
 ## 5. Instrucciones de Sobic
 
