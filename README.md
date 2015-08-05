@@ -49,7 +49,7 @@ Los dos primeros pertenecen a composer y el último es el alma de sobic, en el s
 
 ## 4. Comenzando con Sobic
 
-Descargar el git desde la dirección de Sobic en github (https://github.com/gamesrol/Sobic/ "Sobic") y guardalo en la raíz del servidor web. A continuación se actualiza "Composer" con el comando:
+Descargar el git desde la dirección de Sobic en github (https://github.com/nextsun-limited/sobic/ "Sobic") y guardalo en la raíz del servidor web. A continuación se actualiza "Composer" con el comando:
     
     composer install/update
     
