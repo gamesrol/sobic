@@ -91,6 +91,10 @@ Se creará un archivo parecido a este "app/database/migrations/ExamplesMigration
 Inicializará la base de datos con la estructura existente, en el caso de no haber creado previamente una migración se ejecutará la migraciones por defecto.
 
     php sobic migrate [--seed]
+    
+Al ejecutar una migración creada por defecto se borrarán las tablas de las bases de datos y se volverán a crear, por lo que los datos se perderán, para evitar esto comenta o borra esta línea dentro del archivo "NameMigration.php":
+
+    Capsule::schema()->dropIfExists('name');
 
 #### 5.2 Creación de Seed y Poblado de datos:
 Crea una semilla que poblará la base de datos con datos de prueba.
