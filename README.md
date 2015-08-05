@@ -90,7 +90,7 @@ Se creará un archivo parecido a este "app/database/migrations/ExamplesMigration
 #### 5.1.2 Ejecutar la migración: 
 Inicializará la base de datos con la estructura existente, en el caso de no haber creado previamente una migración se ejecutará la migraciones por defecto.
 
-    php sobic migrate
+    php sobic migrate [--seed]
 
 #### 5.2 Creación de Seed y Poblado de datos:
 Crea una semilla que poblará la base de datos con datos de prueba.
@@ -138,8 +138,15 @@ Durante la creación del scaffold se modifican los siguientes archivos:
  - En "app/main.php" bajo la etiqueta "/** Scaffold PHP Controller **/" donde se añade el método "include" con la ubicación del controlador.
  - En "public/js/main.js" bajo la etiqueta "/* Es importante que estas lineas siempre esten al final para que funcione el scaffolg. */" donde se indica la ubicación de los controladores.
  - En "public/partials/layout.html" bajo las etiquetas "< !-- Scaffold JS -- >" y "< !-- Scaffold HTML -- >" donde primeramente se carga la libreria js y después se crea el enlace en la vista HTML.
-  
-Después de crear un scaffold ha de actualizarse composer para cargar el modelo creado y realizar una migración para actualizar la base de datos.
+
+Después de crear un modelo ha de actualizarse composer, para cargar el modelo creado, introduciendo:
+    
+    composer dump-autoload
+
+También hay que ejecutar la migración que se creó con el scaffold, con el siguiente comando:
+
+    php sobic migrate [--seed]
+
 
 #### 5.6 Creación de Vistas: 
 La vista presenta el 'modelo' (información y lógica de negocio) en un formato adecuado para interactuar (usualmente la interfaz de usuario) por tanto requiere de dicho 'modelo' la información que debe representar como salida.
