@@ -47,14 +47,13 @@ $app->group('/user', function () use ($app) {
 
 		$results = [];
 		$results["success"]= "false";
-		
-		$veri = User::where('email', '=', $data['user']['email'])->where('password', '=', hash('sha512', $data['user']['password']))->exists();
-
-		if($veri){
+	
+		$veri = User::where('email', '=', $data['user']['email'])->where('password', '=', hash('sha512', $data['user']['password']))->first();
+		if(User::where('email', '=', $data['user']['email'])->where('password', '=', hash('sha512', $data['user']['password']))->exists()){
 			$results["id"] = $veri->id;
 			$results["email"] = $veri->email;
 			$results["isAdmin"] = $veri->isAdmin;
-			$results["key"] = hash('sha512', $user->id.$user->email.$user->created_at);
+			$results["key"] = hash('sha512', $very->id.$very->email.$very->created_at);
 			$results["success"]= "true";
 		}
 	
