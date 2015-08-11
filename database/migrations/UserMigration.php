@@ -13,7 +13,7 @@ class UserMigration {
 
 		Capsule::schema()->create('users', function($table) {
 			$table->increments('id');
-			$table->string('email');
+			$table->string('email')->unique();
 			$table->string('password');
 			$table->boolean('isAdmin');
 			$table->timestamps();
