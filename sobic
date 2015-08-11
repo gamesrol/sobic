@@ -151,7 +151,7 @@ class Sobic {
 		fwrite($fp, '		$results = [];'.PHP_EOL);
 		fwrite($fp, '		$results["success"]= "false";'.PHP_EOL);
 		fwrite($fp, '		if (validatedKey($data[\'user\'])) {'.PHP_EOL);
-		fwrite($fp, '			if($data[\''.substr($this->args[3], 0, -1).'\'][\'id\']){'.PHP_EOL);
+		fwrite($fp, '			if(isset($data[\''.substr($this->args[3], 0, -1).'\'][\'id\'])){'.PHP_EOL);
 		fwrite($fp, '				'.substr($name, 0, -1).'::find($data[\''.substr($this->args[3], 0, -1).'\'][\'id\'])->update($data[\''.substr($this->args[3], 0, -1).'\']);'.PHP_EOL);
 		fwrite($fp, '			}else{'.PHP_EOL);
 		fwrite($fp, '				'.substr($name, 0, -1).'::create($data[\''.substr($this->args[3], 0, -1).'\']);'.PHP_EOL);
