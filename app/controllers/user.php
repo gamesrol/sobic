@@ -53,7 +53,7 @@ $app->group('/user', function () use ($app) {
 			$results["id"] = $veri->id;
 			$results["email"] = $veri->email;
 			$results["isAdmin"] = $veri->isAdmin;
-			$results["key"] = hash('sha512', $very->id.$very->email.$very->created_at);
+			$results["key"] = hash('sha512', $veri->id.$veri->email.$veri->created_at);
 			$results["success"]= "true";
 		}
 	
