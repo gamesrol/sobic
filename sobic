@@ -433,11 +433,15 @@ class Sobic {
 		$fp=fopen(FRONTEND_MAIN_PATH,'r'); 
 		$nf = [];
 		while (!feof($fp)) { 
-			array_push($nf,fgets($fp,4096)); 
+			$line = fgets($fp,4096);
+			array_push($nf, $line); 
+			if(trim($line) == trim('/** Scaffold main.js **/')){
+				$lineRoute = count($nf);
+			}
 		} 
 		fclose($fp);
 		
-		array_splice( $nf, count($nf)-4, 0, 
+		array_splice( $nf, $lineRoute, 0, 
 			"	}).when('/".$this->args[3]."', {".PHP_EOL.
 			"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/show.html',".PHP_EOL.
 			"		controller: '".substr($name, 0, -1)."Controller'".PHP_EOL.
