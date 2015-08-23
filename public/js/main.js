@@ -7,8 +7,6 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 		enabled: true,
   		requireBase: false
 	}).hashPrefix = '!';
-
-	/* Es importante que estas líneas siempre esten al final para que funcione el scaffolg. */
 	$routeProvider.when('/', {
 		templateUrl: 'partials/pages/home.html'
 	}).when('/user', {
@@ -20,6 +18,8 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 	}).when('/contact', {
 		templateUrl: 'partials/pages/contact.html',
 		controller: 'ContactController'
+	/* Es importante que respetes estos comentarios para general scaffold sin probremas. */
+	/** Scaffold main.js **/
 	}).otherwise({
 		redirectTo: '/'
 	});

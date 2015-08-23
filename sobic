@@ -2,7 +2,7 @@
 <?php
 
 /*
-Sobic 1.0 
+Sobic 1.1 
 
 	Idea and implementation by:
 		-Gustavo Adolfo Mesa Roldán
@@ -31,7 +31,7 @@ class Sobic {
 
 	function exec(){
 		$c = new Color();
-		echo $c("\nSobic 1.0 Dev\n\n")->bold();
+		echo $c("\nSobic 1.1 Dev\n\n")->bold();
 		if (count($this->args) <= 1) {
 			$this->help();
 		} else {
