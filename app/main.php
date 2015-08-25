@@ -15,4 +15,6 @@ $app->group('/api', function () use ($app) {
 	/* Es importante que respetes estos comentarios para general scaffold sin probremas. */
 	/** Scaffold PHP Controller **/
 
+	
+
 });

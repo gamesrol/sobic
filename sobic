@@ -276,7 +276,8 @@ class Sobic {
 		fwrite($fp1, '	<form class="col-xs-6 col-xs-offset-3">'.PHP_EOL);
 		fwrite($fp1, '		<h3 ng-if="!'.substr($this->args[3], 0, -1).'.id">Create '.substr($this->args[3], 0, -1).'</h3><h3 ng-if="'.substr($this->args[3], 0, -1).'.id">Edit '.substr($this->args[3], 0, -1).'</h3>'.PHP_EOL);
 		for($i = 4; $i<count($this->args); $i++){
-			fwrite($fp1, '			<input type="text" class="form-control" placeholder="'.ucwords(split("'", $this->args[$i])[1]).'" ng-model="'.substr($this->args[3], 0, -1).'.'.split("'", $this->args[$i])[1].'" >'.PHP_EOL);
+			fwrite($fp1,$this->getInputHTML($this->args[$i],substr($this->args[3], 0, -1)).PHP_EOL );
+			
 		}
 		fwrite($fp1, '		<input type="submit" class="btn btn-info pull-right" value="send" ng-click="create'.substr($name, 0, -1).'('.substr($this->args[3], 0, -1).')">'.PHP_EOL);
 		fwrite($fp1, '	</form>'.PHP_EOL);
@@ -478,7 +479,7 @@ class Sobic {
 		'		<script src="js/controllers/'.substr($this->args[3], 0, -1).'/form.js"></script>'.PHP_EOL);
 		
 		array_splice( $nf2, $lineLink, 0, 
-		'							<li><a href="'.$this->args[3].'" class="shadowText" title="'.$name.'"><span>'.substr($name, 0, -1).'</span></a></li>'.PHP_EOL);
+		'							<li ng-if="user"><a href="'.$this->args[3].'" class="shadowText" title="'.$name.'"><span>'.substr($name, 0, -1).'</span></a></li>'.PHP_EOL);
 		
 		$fp2 = fopen(LAYOUT_HTML_PATH, 'w');
 		foreach ($nf2 as $line) {
@@ -508,6 +509,28 @@ class Sobic {
 			$obj = new $class;
 			$obj->run();
 		}
+	}
+	
+	private function getInputHTML($arg,$model){
+		
+		$type = explode("(",$arg)[0];
+		$html = '			<div class="form-group">'.PHP_EOL;
+	
+		switch ($type){
+			
+			case 'date':
+				$html .= '				<datepicker ng-model="'.$model.'.'.split("'", $arg)[1].'" ></datepicker>'.PHP_EOL;
+			
+				break;
+			
+			default:
+				
+				$html .= '				<input type="text" class="form-control" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" >'.PHP_EOL;
+			
+		}
+		$html .= '			</div>'.PHP_EOL;
+		return $html;
+	
 	}
 }
 
