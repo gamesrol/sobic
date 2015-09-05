@@ -519,8 +519,20 @@ class Sobic {
 		switch ($type){
 			
 			case 'date':
-				$html .= '				<datepicker ng-model="'.$model.'.'.split("'", $arg)[1].'" ></datepicker>'.PHP_EOL;
-			
+				//$html .= '				<datepicker ng-model="'.$model.'.'.split("'", $arg)[1].'" ></datepicker>'.PHP_EOL;
+				$html .= '				<p class="input-group">'.PHP_EOL;
+                $html .= '					<input type="text" class="form-control"'
+                							.'datepicker-popup="mediumDate"'
+                							.'ng-model="'.$model.'.'.split("'", $arg)[1].'"'
+                							.'close-text="Close" />'.PHP_EOL;
+                $html .= '					<span class="input-group-btn">'.PHP_EOL;
+                $html .= '						<button type="button" class="btn btn-default"'
+                								.'ng-click="open($event)"><i class="glyphicon' 
+                								.'glyphicon-calendar"></i></button>'.PHP_EOL;
+                $html .= '					</span>'.PHP_EOL;
+                $html .= '				</p>'.PHP_EOL;
+                $html .= '				<p class="input-group">'.PHP_EOL;
+                				
 				break;
 			
 			default:
