@@ -24,7 +24,7 @@
 	},
 	"autoload": {
 		"files": [ 
-			"vendor/sobic/main.php",
+			"app/helper.php",
 			"config/environment.php"
 		],
 		"classmap": [
