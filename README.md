@@ -90,9 +90,10 @@ Se creará un archivo parecido a este "app/database/migrations/ExamplesMigration
 #### 5.1.2 Ejecutar la migración: 
 Inicializará la base de datos con la estructura existente, en el caso de no haber creado previamente una migración se ejecutará la migraciones por defecto.
 
-    php sobic migrate [--seed]
+    php sobic migrate [name]
     
-Al ejecutar una migración creada por defecto se borrarán las tablas de las bases de datos y se volverán a crear, por lo que los datos se perderán, para evitar esto comenta o borra esta línea dentro del archivo "NameMigration.php":
+Ejecuta la migraci&oacute;n nombrada, para realizar más de una introduce los nombres por orden de las relaciones.    
+Al ejecutar una migración creada por defecto se borrará la tabla de la base de datos y se volverán a crear, por lo que los datos se perderán, para evitar esto comenta o borra esta línea dentro del archivo "NameMigration.php":
 
     Capsule::schema()->dropIfExists('name');
 
@@ -182,11 +183,6 @@ Sobic utiliza los siguientes frameworks:
  - Composer como gestor de dependencias, publicado bajo <a href="https://es.wikipedia.org/wiki/Licencia_MIT"> licencia MIT. </a>
 
 ## 8. Desarrolladores
-Idea and implementation by:
 
- - Gustavo Adolfo Mesa Roldán
-
-Supported by:
-
- - Daniel rodriguez (Assistant, something more than itching code & doc, corrections and moral support)
- - Rafael Bustamante (Manager, css artist and moral support)
+ - Gustavo Adolfo Mesa Roldán (Idea, coordinación y desarollo)
+ - Daniel rodriguez (Desarrollo, testing y documentacion)

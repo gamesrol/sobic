@@ -2,7 +2,7 @@
 <?php
 
 /*
-Sobic 1.1 
+Sobic 1.2
 
 	Idea and implementation by:
 		-Gustavo Adolfo Mesa Roldán
@@ -31,7 +31,7 @@ class Sobic {
 
 	function exec(){
 		$c = new Color();
-		echo $c("\nSobic 1.1 Dev\n\n")->bold();
+		echo $c("\nSobic 1.2\n\n")->bold();
 		if (count($this->args) <= 1) {
 			$this->help();
 		} else {
@@ -75,16 +75,35 @@ class Sobic {
 
 	function executeMigrations(){
 		$c = new Color();
-		$files = glob(MIGRATIONS_PATH.'/*.php');
+		$files = array();
+		if($this->args[2]) {
+			for($i = 2; $i<count($this->args); $i++){
+				$name = ucwords($this->args[$i]);
+				array_push($files, MIGRATIONS_PATH.'/'.$name.'Migration.php');
+				echo $c($name." migrate complete.\n")->green();
+			}
+		}/* else {
+			$files = glob(MIGRATIONS_PATH.'/*.php');
+			echo $c("All migrate\n\n")->green();
+		}*/
 		$this->run($files);
-		echo $c("Migrations upgrade was compiled successful\n\n")->green();
+		echo "\n";
 	}
 
 	function executeSeed(){
 		$c = new Color();
-		$files = glob(SEEDS_PATH.'/*.php');
+		$files = array();
+		if($this->args[2]) {
+			for($i = 2; $i<count($this->args); $i++){
+				$name = ucwords($this->args[$i]);
+				array_push($files, SEEDS_PATH.'/'.$name.'Seed.php');
+				echo $c($name." seed complete.\n")->green();
+			}
+		}/* else {
+			$files = glob(SEEDS_PATH.'/*.php');
+		}*/
 		$this->run($files);
-		echo $c("Seed upgrade was compiled successful\n\n")->green();
+		echo "\n";
 	}
 
 	function executeLess(){
@@ -193,17 +212,23 @@ class Sobic {
 			if(trim($line) == trim('/** Scaffold PHP Controller **/')){
 				$lineNum = count($nf);
 			}
+			if(trim($line) == trim('include (\'controllers/'.substr($this->args[3], 0, -1).'.php\');')){
+				$exist = true;
+			}
 		} 
 		fclose($fp);
-		
-		array_splice( $nf, $lineNum, 0, '	include (\'controllers/'.substr($this->args[3], 0, -1).'.php\');'.PHP_EOL );
-		
-		$fp = fopen(BACKEND_MAIN_PATH, 'w');
-		foreach ($nf as $line) {
-		   	fwrite($fp, $line);
+		if(!$exist){
+			array_splice( $nf, $lineNum, 0, '	include (\'controllers/'.substr($this->args[3], 0, -1).'.php\');'.PHP_EOL );
+			
+			$fp = fopen(BACKEND_MAIN_PATH, 'w');
+			foreach ($nf as $line) {
+			   	fwrite($fp, $line);
+			}
+			fclose($fp);
+			echo $c("Modific file \tapp/main.php\n")->green();
+		}else{
+			echo $c("Exist include \tapp/main.php\n")->green();
 		}
-		fclose($fp);
-		echo $c("Modific file \tapp/main.php\n")->green();
 	}
 
 	function createModel(){
@@ -267,11 +292,11 @@ class Sobic {
 			mkdir("public/partials/".substr($this->args[3], 0, -1), 0700);
 		    echo $c("Create folder \tpublic/partials/".substr($this->args[3], 0, -1)."\n")->green();
 		}else{
-			echo $c("Exicts folder \tpublic/partials/".substr($this->args[3], 0, -1)."\n")->green();
+			echo $c("Exist folder \tpublic/partials/".substr($this->args[3], 0, -1)."\n")->green();
 		}
 		
 		/** HTML Formulario* */
-		$fp1 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/form.html', 'w');
+		$fp1 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Form.html', 'w');
 		fwrite($fp1, '<div class="weather container">'.PHP_EOL);
 		fwrite($fp1, '	<form class="col-xs-6 col-xs-offset-3">'.PHP_EOL);
 		fwrite($fp1, '		<h3 ng-if="!'.substr($this->args[3], 0, -1).'.id">Create '.substr($this->args[3], 0, -1).'</h3><h3 ng-if="'.substr($this->args[3], 0, -1).'.id">Edit '.substr($this->args[3], 0, -1).'</h3>'.PHP_EOL);
@@ -283,10 +308,10 @@ class Sobic {
 		fwrite($fp1, '	</form>'.PHP_EOL);
 		fwrite($fp1, '</div>'.PHP_EOL);
 		fclose($fp1);
-		echo $c("Create file \tpublic/partials/".substr($this->args[3], 0, -1)."/form.html\n")->green();
+		echo $c("Create file \tpublic/partials/".substr($this->args[3], 0, -1)."/".substr($this->args[3], 0, -1)."Form.html\n")->green();
 		
 		/** HTML Listado* */
-		$fp2 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/show.html', 'w');
+		$fp2 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Show.html', 'w');
 		fwrite($fp2, '<div class="shop container">'.PHP_EOL);
 		fwrite($fp2, '	<h3 class="col-xs-12"><i class="fa fa-list"></i> '.$name.'</h3>'.PHP_EOL);
 		fwrite($fp2, '	<div class="form-group col-xs-11 col-sm-7 col-md-5">'.PHP_EOL);
@@ -322,7 +347,7 @@ class Sobic {
 		fwrite($fp2, '	</div>'.PHP_EOL);
 		fwrite($fp2, '</div>'.PHP_EOL);
 		fclose($fp2);
-		echo $c("Create file \tpublic/partials/".substr($this->args[3], 0, -1)."/form.html\n")->green();
+		echo $c("Create file \tpublic/partials/".substr($this->args[3], 0, -1)."/".substr($this->args[3], 0, -1)."Show.html\n")->green();
 
 		/* Comprueba o crea la carpeta del controlador JS*/		
 		if(!file_exists("public/js/controllers/".substr($this->args[3], 0, -1))) {
@@ -333,8 +358,8 @@ class Sobic {
 		}
 		
 		/** JS Formulario* */
-		$fp3 = fopen('public/js/controllers/'.substr($this->args[3], 0, -1).'/form.js', 'w');
-		fwrite($fp3, 'app.controller(\''.substr($name, 0, -1).'FormController\', function($scope, $cookieStore, $http, $location, $routeParams, $modal) {'.PHP_EOL);
+		$fp3 = fopen('public/js/controllers/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Form.js', 'w');
+		fwrite($fp3, 'app.controller(\''.substr($name, 0, -1).'FormController\', function($scope, $cookieStore, $http, $location, $routeParams, $uibModal) {'.PHP_EOL);
 		fwrite($fp3, '	if( typeof($cookieStore.get(\'user\')) != "undefined" ){'.PHP_EOL);
 		fwrite($fp3, '		$scope.user = $cookieStore.get(\'user\');	'.PHP_EOL);
 		fwrite($fp3, '		if($routeParams.id){'.PHP_EOL);
@@ -350,11 +375,11 @@ class Sobic {
 		fwrite($fp3, '				if(data.success == "true"){'.PHP_EOL);
 		fwrite($fp3, '					$scope.'.substr($this->args[3], 0, -1).' = data.'.substr($this->args[3], 0, -1).';'.PHP_EOL);
 		fwrite($fp3, '				}else{'.PHP_EOL);
-		fwrite($fp3, '					modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp3, '					modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_unknow") );'.PHP_EOL);
 		fwrite($fp3, '				}'.PHP_EOL);
 		
 		fwrite($fp3, '			}).error(function(data, status, headers, config) {'.PHP_EOL);
-		fwrite($fp3, '				modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp3, '				modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_connection") );'.PHP_EOL);
 		fwrite($fp3, '			});'.PHP_EOL);
 		fwrite($fp3, '		}'.PHP_EOL.PHP_EOL);
 		fwrite($fp3, '		$scope.create'.substr($name, 0, -1).' = function ('.substr($this->args[3], 0, -1).') {'.PHP_EOL);
@@ -371,21 +396,39 @@ class Sobic {
 		fwrite($fp3, '				if(data.success == "true"){'.PHP_EOL);
 		fwrite($fp3, '					$location.path( "/'.$this->args[3].'" );'.PHP_EOL);
 		fwrite($fp3, '				}else{'.PHP_EOL);
-		fwrite($fp3, '					modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp3, '					modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_unknow") );'.PHP_EOL);
 		fwrite($fp3, '				}'.PHP_EOL);
 		
 		fwrite($fp3, '			}).error(function(data, status, headers, config) {'.PHP_EOL);
-		fwrite($fp3, '				modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp3, '				modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_connection") );'.PHP_EOL);
 		fwrite($fp3, '			});'.PHP_EOL);
 		fwrite($fp3, '		};'.PHP_EOL);
+		
+		$date = false;
+		
+		for($i = 4; $i<count($this->args); $i++){
+			if(explode("(",$this->args[$i])[0]=="date"){
+				$date = true;
+			}
+			
+		}
+		
+		if($date) {
+			fwrite($fp3, '		$scope.status = {'.PHP_EOL);
+			fwrite($fp3, '			opened: false'.PHP_EOL);
+			fwrite($fp3, '		};'.PHP_EOL);
+			fwrite($fp3, '		$scope.open = function($event) {'.PHP_EOL);
+			fwrite($fp3, '			$scope.status.opened = true;'.PHP_EOL);
+			fwrite($fp3, '		};'.PHP_EOL);
+		}
 		fwrite($fp3, '	}'.PHP_EOL);
 		fwrite($fp3, '});'.PHP_EOL);
 		fclose($fp3);
-		echo $c("Create file \tpublic/js/controllers/".substr($this->args[3], 0, -1)."/form.js\n")->green();
+		echo $c("Create file \tpublic/js/controllers/".substr($this->args[3], 0, -1)."/".substr($this->args[3], 0, -1)."Form.js\n")->green();
 
 		/** JS Listado* */
-		$fp4 = fopen('public/js/controllers/'.substr($this->args[3], 0, -1).'/show.js', 'w');
-		fwrite($fp4, 'app.controller(\''.substr($name, 0, -1).'Controller\', function($scope, $cookieStore, $http, $filter, $modal) {'.PHP_EOL);
+		$fp4 = fopen('public/js/controllers/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Show.js', 'w');
+		fwrite($fp4, 'app.controller(\''.substr($name, 0, -1).'Controller\', function($scope, $cookieStore, $http, $filter, $uibModal) {'.PHP_EOL);
 		fwrite($fp4, '	if(typeof($cookieStore.get(\'user\')) != "undefined"){'.PHP_EOL);
 		fwrite($fp4, '		$scope.user = $cookieStore.get(\'user\');'.PHP_EOL);
 		fwrite($fp4, '	}'.PHP_EOL.PHP_EOL);
@@ -398,11 +441,11 @@ class Sobic {
 		fwrite($fp4, '		if(data.success == "true"){'.PHP_EOL);
 		fwrite($fp4, '			$scope.list = data.'.$this->args[3].';'.PHP_EOL);
 		fwrite($fp4, '		}else{'.PHP_EOL);
-		fwrite($fp4, '			modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp4, '			modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_unknow") );'.PHP_EOL);
 		fwrite($fp4, '		}'.PHP_EOL);
 		
 		fwrite($fp4, '	}).error(function(data, status, headers, config) {'.PHP_EOL);
-		fwrite($fp4, '		modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp4, '		modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_connection") );'.PHP_EOL);
 		fwrite($fp4, '	});'.PHP_EOL.PHP_EOL);
 		fwrite($fp4, '	$scope.remove'.substr($name, 0, -1).' = function('.substr($this->args[3], 0, -1).'){'.PHP_EOL);
 		fwrite($fp4, '		var basket = $cookieStore.get(\'basket\');'.PHP_EOL);
@@ -420,16 +463,16 @@ class Sobic {
 		fwrite($fp4, '				var index = $scope.list.indexOf('.substr($this->args[3], 0, -1).')'.PHP_EOL);
 		fwrite($fp4, '				$scope.list.splice(index, 1);'.PHP_EOL);
 		fwrite($fp4, '			}else{'.PHP_EOL);
-		fwrite($fp4, '				modal = modalCreate($modal,"danger", "Error", "It has successfully made the connection but something went wrong");'.PHP_EOL);
+		fwrite($fp4, '				modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_unknow") );'.PHP_EOL);
 		fwrite($fp4, '			}'.PHP_EOL);
 		
 		fwrite($fp4, '		}).error(function(data, status, headers, config) {'.PHP_EOL);
-		fwrite($fp4, '			modal = modalCreate($modal,"danger", "Error", "Not connected with server.");'.PHP_EOL);
+		fwrite($fp4, '			modal = modalCreate($uibModal,"danger", $filter("translate")("error") ,  $filter("translate")("error_connection") );'.PHP_EOL);
 		fwrite($fp4, '		});'.PHP_EOL);
 		fwrite($fp4, '	};'.PHP_EOL);
 		fwrite($fp4, '});'.PHP_EOL);
 		fclose($fp4);
-		echo $c("Create file \tpublic/js/controllers/".substr($this->args[3], 0, -1)."/show.js\n")->green();
+		echo $c("Create file \tpublic/js/controllers/".substr($this->args[3], 0, -1)."/".substr($this->args[3], 0, -1)."Show.js\n")->green();
 		
 		$fp=fopen(FRONTEND_MAIN_PATH,'r'); 
 		$nf = [];
@@ -439,26 +482,32 @@ class Sobic {
 			if(trim($line) == trim('/** Scaffold main.js **/')){
 				$lineRoute = count($nf);
 			}
+			if(trim($line) == trim("}).when('/".$this->args[3]."', {")){
+				$existRoute = true;
+			}
 		} 
 		fclose($fp);
-		
-		array_splice( $nf, $lineRoute, 0, 
-			"	}).when('/".$this->args[3]."', {".PHP_EOL.
-			"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/show.html',".PHP_EOL.
-			"		controller: '".substr($name, 0, -1)."Controller'".PHP_EOL.
-			"	}).when('/".$this->args[3]."/form', {".PHP_EOL.
-			"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/form.html',".PHP_EOL.
-			"		controller: '".substr($name, 0, -1)."FormController'".PHP_EOL.
-			"	}).when('/".$this->args[3]."/form/:id', {".PHP_EOL.
-			"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/form.html',".PHP_EOL.
-			"		controller: '".substr($name, 0, -1)."FormController'".PHP_EOL );
-		
-		$fp = fopen(FRONTEND_MAIN_PATH, 'w');
-		foreach ($nf as $line) {
-		   	fwrite($fp, $line);
+		if(!$existRoute){
+			array_splice( $nf, $lineRoute, 0, 
+				"	}).when('/".$this->args[3]."', {".PHP_EOL.
+				"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/".substr($this->args[3], 0, -1)."Show.html',".PHP_EOL.
+				"		controller: '".substr($name, 0, -1)."Controller'".PHP_EOL.
+				"	}).when('/".$this->args[3]."/form', {".PHP_EOL.
+				"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/".substr($this->args[3], 0, -1)."Form.html',".PHP_EOL.
+				"		controller: '".substr($name, 0, -1)."FormController'".PHP_EOL.
+				"	}).when('/".$this->args[3]."/form/:id', {".PHP_EOL.
+				"		templateUrl: 'partials/".substr($this->args[3], 0, -1)."/".substr($this->args[3], 0, -1)."Form.html',".PHP_EOL.
+				"		controller: '".substr($name, 0, -1)."FormController'".PHP_EOL );
+			
+			$fp = fopen(FRONTEND_MAIN_PATH, 'w');
+			foreach ($nf as $line) {
+			   	fwrite($fp, $line);
+			}
+			fclose($fp);
+			echo $c("Modific file \tpublic/js/main.js\n")->green();
+		}else{
+			echo $c("Exist route \tpublic/js/main.js\n")->green();
 		}
-		fclose($fp);
-		echo $c("Modific file \tpublic/js/main.js\n")->green();
 		
 		$fp2=fopen(LAYOUT_HTML_PATH,'r'); 
 		$nf2 = [];
@@ -471,23 +520,29 @@ class Sobic {
 			if(trim($line) == trim('<!-- Scaffold HTML -->')){
 				$lineLink = count($nf2)+1;
 			}
+			if(trim($line) == trim('<script type="text/javascript" src="js/controllers/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Show.js"></script>')){
+				$existScripts = true;
+			}
 		} 
 		fclose($fp2);
 		
-		array_splice( $nf2, $lineNum, 0, 
-		'		<script src="js/controllers/'.substr($this->args[3], 0, -1).'/show.js"></script>'.PHP_EOL.
-		'		<script src="js/controllers/'.substr($this->args[3], 0, -1).'/form.js"></script>'.PHP_EOL);
-		
-		array_splice( $nf2, $lineLink, 0, 
-		'							<li ng-if="user"><a href="'.$this->args[3].'" class="shadowText" title="'.$name.'"><span>'.substr($name, 0, -1).'</span></a></li>'.PHP_EOL);
-		
-		$fp2 = fopen(LAYOUT_HTML_PATH, 'w');
-		foreach ($nf2 as $line) {
-		   	fwrite($fp2, $line);
+		if(!$existScripts){
+			array_splice( $nf2, $lineNum, 0, 
+			'		<script type="text/javascript" src="js/controllers/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Show.js"></script>'.PHP_EOL.
+			'		<script type="text/javascript" src="js/controllers/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Form.js"></script>'.PHP_EOL);
+			
+			array_splice( $nf2, $lineLink, 0, 
+			'							<li ng-if="user"><a href="'.$this->args[3].'" class="shadowText" title="'.$name.'"><span>'.substr($name, 0, -1).'</span></a></li>'.PHP_EOL);
+			
+			$fp2 = fopen(LAYOUT_HTML_PATH, 'w');
+			foreach ($nf2 as $line) {
+			   	fwrite($fp2, $line);
+			}
+			fclose($fp2);
+			echo $c("Modific file \tpublic/partials/layout.html\n")->green();
+		}else{
+			echo $c("Exist script \tpublic/partials/layout.html\n")->green();
 		}
-		fclose($fp2);
-		echo $c("Modific file \tpublic/partials/layout.html\n")->green();
-		
 	}
 	
 	function createScaffold(){
@@ -519,30 +574,42 @@ class Sobic {
 		switch ($type){
 			
 			case 'date':
-				// TODO  Datepicker
+				$html .= '				<div class="input-group">'.PHP_EOL;
+				$html .= '					<input id="date" type="text"  uib-datepicker-popup="dd-MM-yyyy" date-disabled="disabled(date, mode)" ng-click="open($event)" class="form-control pointer" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" is-open="status.opened" max-date="today" ng-required="true" show-button-bar="false" readonly="" required="required" show-weeks="false" />'.PHP_EOL;
+				$html .= '					<span class="input-group-btn">'.PHP_EOL;
+				$html .= '						<button type="button" class="btn btn-default" ng-click="open($event)">'.PHP_EOL;
+				$html .= '							<i class="glyphicon glyphicon-calendar"></i>'.PHP_EOL;
+				$html .= '						</button>'.PHP_EOL;
+				$html .= '					</span>'.PHP_EOL;
+				$html .= '				</div>'.PHP_EOL;
+				break;
 			case 'dateTime':
-				// TODO DatetimePicker
+				$html .= '				<input type="datetime" class="form-control" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" >'.PHP_EOL;
+				break;
 			case 'time' :
-				// TODO TimePicker
+				$html .= '				<input type="time" class="form-control" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" >'.PHP_EOL;
+				break;
 			case 'enum':
-				// TODO Select o Radio con posibles valores
 			case 'longText' :
 			case 'mediumText' :
 			case 'text':
-				// TODO textarea
+				$html .= '				<textarea class="form-control" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" ></textarea>'.PHP_EOL;
+				break;
 			case 'boolean' :
-				// TODO checkbox
+				$html .= '				<input type="checkbox" class="form-control" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" >'.PHP_EOL;
+				break;
 			case 'decimal' :
 			case 'double' :
 			case 'float' :
-			  	// TODO input type number
 			case 'integer' :
 			case 'mediumInteger' :
 			case 'bigInteger' :
-				// TODO input type number
+				$html .= '				<input type="number" class="form-control" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" >'.PHP_EOL;
+				break;
+			case 'string' :
 			default:
-				
 				$html .= '				<input type="text" class="form-control" placeholder="'.ucwords(split("'", $arg)[1]).'" ng-model="'.$model.'.'.split("'", $arg)[1].'" >'.PHP_EOL;
+				break;
 			
 		}
 		$html .= '			</div>'.PHP_EOL;

@@ -1,11 +1,11 @@
-app.controller('ModalController', function ($scope, $modalInstance,  modal) {
+app.controller('ModalController', function ($scope, $uibModalInstance,  modal) {
 	
 	//Modal config
 	$scope.modal = modal;
 	
 	// Close modal function
 	$scope.closeModal = function () {
-		$modalInstance.dismiss('cancel');
+		$uibModalInstance.dismiss('cancel');
 	};
 
 });

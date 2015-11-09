@@ -1,0 +1,74 @@
+<div ng-if="logg == 'login'"> 
+	<div class="modal-header modal-header-default">
+		<button type="button" class="close" aria-label="Close" ng-click="closeModal()"><span aria-hidden="true">&times;</span></button>
+		<h3 class="modal-title">{{ 'login' | translate }}</h3>
+	</div>
+	<div class="modal-body login">
+		<form class="row">
+			<div class="col-xs-12 col-sm-6">
+				<div class="input-group input-group-lg">
+					<span class="input-group-addon">@</span>
+					<input type="email" class="form-control" placeholder="{{ 'email' | translate }}" ng-model="login.email">
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6">
+				<div class="input-group input-group-lg">
+					<input type="password" class="form-control" placeholder="{{ 'password' | translate }}" ng-model="login.password">
+				 	<span class="input-group-btn">
+				    	<button class="btn btn-primary" type="submit" ng-click="loginUser(login)" ng-disabled="!login.email || !login.password">{{ 'user_enter' | translate }}</button>
+				  	</span>
+				</div>
+			</div>
+		</form>
+		<a ng-click="change('recovery')">{{ 'pass_reminder' | translate }}</a>
+	</div>
+</div>
+
+<div ng-if="logg == 'signup'">
+	<div class="modal-header modal-header-default">
+		<button type="button" class="close" aria-label="Close" ng-click="closeModal()"><span aria-hidden="true">&times;</span></button>
+		<h3 class="modal-title">{{ 'signup' | translate }}</h3>
+	</div>
+	<div class="modal-body login">
+		<form class="row">
+			<div class="col-xs-12 col-sm-12">
+				<div class="input-group input-group-lg">
+					<span class="input-group-addon">@</span>
+					<input type="email" class="form-control" placeholder="{{ 'email' | translate }}" ng-model="register.email">
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-12">
+				<input type="password" class="form-control input-lg" placeholder="{{ 'confirm_pass' | translate }}" ng-model="register.password2">
+			</div>
+			<div class="col-xs-12 col-sm-12">
+				<div class="input-group input-group-lg">
+					<input type="password" class="form-control" placeholder="{{ 'password' | translate }}" ng-model="register.password">
+					
+				 	<span class="input-group-btn">
+				  		<button type="submit" class="btn btn-primary" ng-click="registerUser(register)" ng-disabled="!register.email || !register.password || !register.password2 || register.password != register.password2">{{ 'user_enter' | translate }}</button>
+				  	</span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div ng-if="logg == 'recovery'">
+	<div class="modal-header modal-header-default">
+		<button type="button" class="close" aria-label="Close" ng-click="closeModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<h3 class="modal-title">{{ 'pass_reminder' | translate }}</h3>
+	</div>
+	<div class="modal-body login">
+		<div class="form-group col-xs-12 col-sm-12">
+			<div class="input-group input-group-lg">
+				<input type="email" class="form-control" placeholder="{{ 'user_recover_mail' | translate }}" ng-model="user.emailRecovery" >
+			 	<span class="input-group-btn">
+			    	<button class="btn btn-primary" type="submit" ng-click="recovery(user.emailRecovery)">{{ 'user_recover_re' | translate }}</button>
+			  	</span>
+			</div>
+		</div>
+		<a ng-click="change('login')">{{ 'back' | translate }}</a>
+	</div>
+</div>

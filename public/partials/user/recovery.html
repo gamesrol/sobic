@@ -1,0 +1,14 @@
+<div class="container">
+	<div class="row">
+		<form  class="col-xs-offset-3 col-xs-6 col-sm-offset-3 col-sm-6">
+			<h3><i class="fa fa-users"></i> {{ 'user_password_change' | translate }}</h3>
+			<div class="form-group col-xs-12 col-sm-12">
+				<div class="input-group-lg input-margin">
+					<input type="password" class="form-control" placeholder="{{ 'new_password' | translate }}" ng-model="pass.password1" />
+					<input type="password" class="form-control input-lg" placeholder="{{ 'confirm_pass' | translate }}" ng-model="pass.password2" />
+				</div>
+				<button class="btn btn-primary pull-right" type="submit" ng-click="changePass(pass)" ng-disabled="!pass.password1 || !pass.password2 || pass.password1 != pass.password2">{{ 'user_recover_re' | translate }}</button>
+			</div>
+		</form>
+	</div>
+</div>

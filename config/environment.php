@@ -13,9 +13,11 @@ define("ENVIRONMENT", "1");
 switch (ENVIRONMENT) {
     default:
         require 'development.php';
+        autoCompileLess('css/less/main.less', 'css/main.css');
         break;
     case 2:
         require 'testing.php';
+        autoCompileLess('css/less/main.less', 'css/main.css');
         break;
     case 3:
         require 'production.php';

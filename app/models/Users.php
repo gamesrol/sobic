@@ -26,4 +26,7 @@ class User extends \Illuminate\Database\Eloquent\Model
 			return $this->belongsTo('Job');
 		}
 	*/
+	public function userReco() {
+		return $this->belongsTo('UsersRec');
+	}
 }

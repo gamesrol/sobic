@@ -17,10 +17,11 @@
 		}
 	],
 	"require": {
-		"slim/slim": "2.*",
+		"slim/slim": "*",
 		"illuminate/database": "*",
-		"leafo/lessphp": "0.4.0",
-		"kevinlebrun/colors.php": "0.*"
+		"leafo/lessphp": "*",
+		"kevinlebrun/colors.php": "*",
+		"digitalnature/php-ref": "dev-master"
 	},
 	"autoload": {
 		"files": [ 

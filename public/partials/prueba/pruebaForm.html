@@ -1,0 +1,21 @@
+<div class="weather container">
+	<form class="col-xs-6 col-xs-offset-3">
+		<h3 ng-if="!prueba.id">Create prueba</h3><h3 ng-if="prueba.id">Edit prueba</h3>
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Name" ng-model="prueba.name" >
+			</div>
+
+			<div class="form-group">
+				<div class="input-group">
+					<input id="date" type="text"  uib-datepicker-popup="dd-MM-yyyy" date-disabled="disabled(date, mode)" ng-click="open($event)" class="form-control pointer" placeholder="Hola" ng-model="prueba.hola" is-open="status.opened" max-date="today" ng-required="true" show-button-bar="false" readonly="" required="required" show-weeks="false" />
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" ng-click="open($event)">
+							<i class="glyphicon glyphicon-calendar"></i>
+						</button>
+					</span>
+				</div>
+			</div>
+
+		<input type="submit" class="btn btn-info pull-right" value="send" ng-click="createPrueba(prueba)">
+	</form>
+</div>

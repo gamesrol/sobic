@@ -1,7 +1,14 @@
-<h1 class="text-center">Sobic: <small>Trend techologies framework designed to build web apps quickly & easy.</small></h1>
+<h1 class="text-center">
+	{{ 'home_title' | translate }}
+	<small>{{ 'trend_techologies' | translate }}</small>
+</h1>
 <hr>
 
-
 <div class="bg-info text-center">
-<a href="https://github.com/rafa-bustamante/Frontend-Test">Download this project source code in Github</a>
+	<a href="https://github.com/nextsun-limited/sobic">{{ 'download_proyect' | translate }}</a>
+</div>
+
+<div class="navbar-fixed-bottom cookies col-sm-5 col-md-4 pull-left" ng-if="cookies">
+	<a ng-click="aceptCookies()"> <i class="fa fa-times pull-right"></i></a>
+	<span>{{ 'cookies_text' | translate }} <a href="cookies" target="_blank">{{ 'cookies_link' | translate }}</a>{{ 'point' | translate }}</span>
 </div>
