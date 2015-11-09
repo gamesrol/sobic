@@ -37,15 +37,6 @@ app.config(['$routeProvider', '$locationProvider', '$translateProvider', functio
 		controller: 'ProfileFormController'
 	/* It is important to respect these comments to generate smooth scaffold. */
 	/** Scaffold main.js **/
-	}).when('/pruebas', {
-		templateUrl: 'partials/prueba/pruebaShow.html',
-		controller: 'PruebaController'
-	}).when('/pruebas/form', {
-		templateUrl: 'partials/prueba/pruebaForm.html',
-		controller: 'PruebaFormController'
-	}).when('/pruebas/form/:id', {
-		templateUrl: 'partials/prueba/pruebaForm.html',
-		controller: 'PruebaFormController'
 	}).otherwise({
 		redirectTo: '/'
 	});

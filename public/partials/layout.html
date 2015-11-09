@@ -43,8 +43,6 @@
 		
 		<!-- It is important to respect these comments to generate smooth scaffold. -->
 		<!-- Scaffold JS -->
-		<script type="text/javascript" src="js/controllers/prueba/pruebaShow.js"></script>
-		<script type="text/javascript" src="js/controllers/prueba/pruebaForm.js"></script>
 		
 	</head>
 
@@ -83,7 +81,6 @@
 						<ul class="nav navbar-nav navbar-right" ng-if="user">
 							<!-- It is important to respect these comments to generate smooth scaffold. -->
 							<!-- Scaffold HTML -->
-							<li ng-if="user"><a href="pruebas" class="shadowText" title="Pruebas"><span>Prueba</span></a></li>
 							<li><a href="profile" class="shadowText" title="{{ 'profile' | translate }}"><span>{{ 'profile' | translate }}</span></a></li>
 							<li ng-if="user.isAdmin"><a href="users/show" class="shadowText" title="{{ 'users' | translate }}"><span>{{ 'users' | translate }}</span></a></li>
 							<li><a ng-click="logout()" class="shadowText pointer" title="{{ 'logout' | translate }}"><span>{{ 'logout' | translate }}</span></a></li>

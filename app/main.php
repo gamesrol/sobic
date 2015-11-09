@@ -85,6 +85,5 @@ $app->group('/api', function () use ($app) {
 
 	/* It is important to respect these comments to generate smooth scaffold. */
 	/** Scaffold PHP Controller **/
-	include ('controllers/prueba.php');
 
 });
