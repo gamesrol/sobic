@@ -297,7 +297,7 @@ class Sobic {
 		
 		/** HTML Formulario* */
 		$fp1 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Form.html', 'w');
-		fwrite($fp1, '<div class="weather container">'.PHP_EOL);
+		fwrite($fp1, '<div class="container">'.PHP_EOL);
 		fwrite($fp1, '	<form class="col-xs-6 col-xs-offset-3">'.PHP_EOL);
 		fwrite($fp1, '		<h3 ng-if="!'.substr($this->args[3], 0, -1).'.id">Create '.substr($this->args[3], 0, -1).'</h3><h3 ng-if="'.substr($this->args[3], 0, -1).'.id">Edit '.substr($this->args[3], 0, -1).'</h3>'.PHP_EOL);
 		for($i = 4; $i<count($this->args); $i++){
@@ -312,7 +312,7 @@ class Sobic {
 		
 		/** HTML Listado* */
 		$fp2 = fopen('public/partials/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Show.html', 'w');
-		fwrite($fp2, '<div class="shop container">'.PHP_EOL);
+		fwrite($fp2, '<div class="container">'.PHP_EOL);
 		fwrite($fp2, '	<h3 class="col-xs-12"><i class="fa fa-list"></i> '.$name.'</h3>'.PHP_EOL);
 		fwrite($fp2, '	<div class="form-group col-xs-11 col-sm-7 col-md-5">'.PHP_EOL);
 		fwrite($fp2, '		<div class="input-group">'.PHP_EOL);
@@ -532,7 +532,7 @@ class Sobic {
 			'		<script type="text/javascript" src="js/controllers/'.substr($this->args[3], 0, -1).'/'.substr($this->args[3], 0, -1).'Form.js"></script>'.PHP_EOL);
 			
 			array_splice( $nf2, $lineLink, 0, 
-			'							<li ng-if="user"><a href="'.$this->args[3].'" class="shadowText" title="'.$name.'"><span>'.substr($name, 0, -1).'</span></a></li>'.PHP_EOL);
+			'							<li ng-if="user"><a href="'.$this->args[3].'" title="'.$name.'"><span>'.substr($name, 0, -1).'</span></a></li>'.PHP_EOL);
 			
 			$fp2 = fopen(LAYOUT_HTML_PATH, 'w');
 			foreach ($nf2 as $line) {
