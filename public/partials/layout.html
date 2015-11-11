@@ -75,15 +75,15 @@
 						</ul>
 
 						<ul class="nav navbar-nav navbar-right" ng-if="!user">
-							<li><a ng-click="logg('login')" class="shadowText pointer" title="{{ 'login' | translate }}"><span>{{ 'login' | translate }}</span></a></li>
-							<li><a ng-click="logg('signup')" class="shadowText pointer" title="{{ 'signup' | translate }}"><span>{{ 'signup' | translate }}</span></a></li>
+							<li><a ng-click="logg('login')" class="pointer" title="{{ 'login' | translate }}"><span>{{ 'login' | translate }}</span></a></li>
+							<li><a ng-click="logg('signup')" class="pointer" title="{{ 'signup' | translate }}"><span>{{ 'signup' | translate }}</span></a></li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right" ng-if="user">
 							<!-- It is important to respect these comments to generate smooth scaffold. -->
 							<!-- Scaffold HTML -->
-							<li><a href="profile" class="shadowText" title="{{ 'profile' | translate }}"><span>{{ 'profile' | translate }}</span></a></li>
-							<li ng-if="user.isAdmin"><a href="users/show" class="shadowText" title="{{ 'users' | translate }}"><span>{{ 'users' | translate }}</span></a></li>
-							<li><a ng-click="logout()" class="shadowText pointer" title="{{ 'logout' | translate }}"><span>{{ 'logout' | translate }}</span></a></li>
+							<li><a href="profile" class="pointer" title="{{ 'profile' | translate }}"><span>{{ 'profile' | translate }}</span></a></li>
+							<li ng-if="user.isAdmin"><a href="users/show" class="pointer" title="{{ 'users' | translate }}"><span>{{ 'users' | translate }}</span></a></li>
+							<li><a ng-click="logout()" class="pointer" title="{{ 'logout' | translate }}"><span>{{ 'logout' | translate }}</span></a></li>
 						</ul>
 					</div>
 				</div>
