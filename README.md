@@ -51,7 +51,7 @@ Los dos primeros pertenecen a composer y el último es el alma de sobic, en el s
 
 Descargar el git desde la dirección de Sobic en github (https://github.com/nextsun-limited/sobic/ "Sobic") y guardalo en la raíz del servidor web. A continuación se actualiza "Composer" con el comando:
     
-    composer install/update
+    composer install
     
 Una vez realizada la tarea y con el sistema gestor de base de datos configurado, se modificará el acceso a la misma para que conecte satisfactoriamente, para esto Sobic ofrece varios entornos de producción. 
 En la carpeta "config" y gestionado por el archivo "enviroment.php" se establece el estado de la plataforma entre desarrollo, prueba y producción, en cada uno podemos tener una base de datos diferente. Cada uno tiene su archivo donde establecer las variables de entorno y se hace de la siguiente manera:
@@ -186,3 +186,4 @@ Sobic utiliza los siguientes frameworks:
 
  - Gustavo Adolfo Mesa Roldán (Idea, coordinación y desarollo)
  - Daniel rodriguez (Desarrollo, testing y documentacion)
+ - Rafael Bustamante (CSS)
