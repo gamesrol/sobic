@@ -186,4 +186,3 @@ Sobic utiliza los siguientes frameworks:
 
  - Gustavo Adolfo Mesa Roldán (Idea, coordinación y desarollo)
  - Daniel rodriguez (Desarrollo, testing y documentacion)
- - Rafael Bustamante (CSS)
