@@ -139,17 +139,17 @@ $app->group('/user', function () use ($app) {
 				$message = "Dear User of Sobic Framework,<br/ >";
 				$message .= "Please visit the url to log in the app, you may change the password after<br/ >";
 				$message .= "-----------------------<br/ >";
-				$message .= "'https://sobic-demo.nextsun.co.uk/recovery/".$pass;
+				$message .= "'https://yourURL/recovery/".$pass;
 				$message .= "<br/ >-----------------------<br/ >";
 				$message .= "Please be sure to copy the entire key into your url. The key will expire after 3 days for security reasons.<br/ >";
 				$message .= "If you did not request this forgotten password email, no action is needed, your password will not be reset as long as the link above is not visited. However, you may want to log into your account and change your security password and answer, as someone may have guessed it.<br/ >";
 				$message .= "Thanks,<br/ >";
 				$message .= "-- Sobic Framework team";
-				$headers = "From: contact@sobic.nextsun \n";
+				$headers = "From: contact@sobic.sobic \n";
 				$headers .= "To-Sender: \n";
 				$headers .= "X-Mailer: PHP\n"; // mailer
-				$headers .= "Reply-To: contact@sobic.nextsun\n"; // Reply address
-				$headers .= "Return-Path: contact@sobic.nextsun\n"; //Return Path for errors
+				$headers .= "Reply-To: contact@sobic.sobic\n"; // Reply address
+				$headers .= "Return-Path: contact@sobic.sobic\n"; //Return Path for errors
 				$headers .= "Content-Type: text/html; charset=iso-8859-1"; //Enc-type
 				$subject = "Your Lost Password";
 				@mail($email,$subject,$message,$headers);
