@@ -11,7 +11,7 @@
 
 ## 1. Introducción
 
-Sobic es un framework basado en el patrón Modelo-Vista-Controlador que combina los lenguajes PHP y AngularJS. Sobic ha sido y continua siendo desarrollado por NextSun Limited.
+Sobic es un framework basado en el patrón Modelo-Vista-Controlador que combina los lenguajes PHP y AngularJS.
 
 
 ## 2. Requisitos de Sobic:
@@ -49,7 +49,7 @@ Los dos primeros pertenecen a composer y el último es el alma de sobic, en el s
 
 ## 4. Comenzando con Sobic
 
-Descargar el git desde la dirección de Sobic en github (https://github.com/nextsun-limited/sobic/ "Sobic") y guardalo en la raíz del servidor web. A continuación se actualiza "Composer" con el comando:
+Descargar el git desde la dirección de Sobic en github (https://github.com/gamesrol/sobic/ "Sobic") y guardalo en la raíz del servidor web. A continuación se actualiza "Composer" con el comando:
     
     composer install
     
@@ -175,7 +175,7 @@ Se crearán los siguientes archivos y directorios:
 
 ## 7. Licencia
 
-Sobic ha sido desarrollado por el equipo de NextSun UK Limited, bajo licencia MIT.
+Sobic ha sido desarrollado bajo licencia MIT.
 
 Sobic utiliza los siguientes frameworks:
 
